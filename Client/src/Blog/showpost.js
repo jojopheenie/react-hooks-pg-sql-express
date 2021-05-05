@@ -67,7 +67,7 @@ const ShowPost = (props) => {
                         post_author: res.data[0].author,
                         post_id: res.data[0].pid
                       })
-                 : null
+                 : null // noop
               )
         .catch((err) => console.log(err) )
     }
@@ -84,7 +84,7 @@ const ShowPost = (props) => {
                           ? setState({...stateLocal, comments_arr: [...res.data]})
                           : null )
            .catch((err) => console.log(err))
-       } 
+       }
      }
    }, [props.location, stateLocal])
 

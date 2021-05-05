@@ -1,10 +1,12 @@
 import auth0 from 'auth0-js'
 import history from './history';
 
+require('./secrets')
+
 export default class Auth {
   auth0 = new auth0.WebAuth({
-    domain: 'webapp1.auth0.com',
-    clientID: 'uZxUdMAsiDWeu3OrNpoi4JwJscdF5nAx',
+    domain: 'webapp10.us.auth0.com',
+    clientID: "GldeXYkNPsouhcSqDLIj8vs8pwUXECkd",
     redirectUri: 'http://localhost:3000/callback',
     responseType: 'token id_token',
     scope: 'openid profile email'
