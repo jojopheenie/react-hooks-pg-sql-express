@@ -13,6 +13,7 @@ const AddPost = () => {
   const handleSubmit = (event) => {
     event.preventDefault()
     const user_id = context.dbProfileState[0].uid
+    console.log('context in addpost', context)
     const username = context.dbProfileState[0].username
     const data = {title: event.target.title.value,
                   body: event.target.body.value,

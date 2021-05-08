@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users (
   uid SERIAL PRIMARY KEY,
   username VARCHAR(255) UNIQUE,
@@ -7,6 +8,10 @@ CREATE TABLE users (
   last_login DATE
 );
 
+INSERT INTO users(username, email, email_verified, date_created)
+VALUES('Josephine', 'josephine@email.com', true, NOW());
+
+DROP TABLE IF EXISTS posts CASCADE;
 CREATE TABLE posts (
   pid SERIAL PRIMARY KEY,
   title VARCHAR(255),
@@ -19,6 +24,16 @@ CREATE TABLE posts (
   likes INT DEFAULT 0
 );
 
+INSERT INTO posts(title, body, user_id, author, date_created)
+VALUES('title', 'body', 1, 'Josephine', NOW() );
+
+INSERT INTO posts(title, body, user_id, author, date_created)
+VALUES('Vacation', 'In cabo...', 1, 'Josephine', NOW() );
+
+INSERT INTO posts(title, body, user_id, author, date_created)
+VALUES('Weekend', 'In Montauk...', 1, 'Josephine', NOW() );
+
+DROP TABLE IF EXISTS comments CASCADE;
 CREATE TABLE comments (
   cid SERIAL PRIMARY KEY,
   comment VARCHAR(255),
@@ -28,7 +43,7 @@ CREATE TABLE comments (
   date_created TIMESTAMP
 );
 
-
+DROP TABLE IF EXISTS messages CASCADE;
 CREATE TABLE messages (
   mid SERIAL PRIMARY KEY,
   message_sender VARCHAR(255) REFERENCES users(username),
@@ -37,3 +52,6 @@ CREATE TABLE messages (
   message_body VARCHAR,
   date_created TIMESTAMP
 );
+
+
+COMMIT;
