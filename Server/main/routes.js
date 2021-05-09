@@ -2,6 +2,87 @@ var express = require('express')
 var router = express.Router()
 var pool = require('./db')
 
+  //
+  // let team_lead_id = pool.query('teams table');
+  // let slackHandle = pool.query('SELECT slackHandle FROM Users WHERE id=$1', [team_lead_id])
+
+  //post a new user, first, last, email, pwd
+  //put the rest of the user info
+  // UPDATE posts SET title= $1, body=$2, user_id=$3, author=$5, date_created=NOW()
+  UPDATE users SET slack_handle=$1,reason_for_joining=$2,country=$3,region=$4,city=$5,post_code=$6,linkedIn=$7,job_title=$8,main_speciality=$9,experience=$10,last_company=$11,num_employees=$12,sector=$13,user_type=$14,current_team_Id=$15,date_created=$16 WHERE user_id=$17
+
+  //get all equalithons
+  SELECT * FROM equalithons ORDER BY startdate ASC
+  //get all challenges
+  SELECT * FROM challenges WHERE equalithon_id=$1
+  //post to user equalithons table, equalithon id, challenge id, teamid
+  INSERT INTO user_equalithons(user_id, equalithon_id, team_id, current)
+  VALUES($1,$2,$3,$4)
+  //get all teams
+
+  //get all equalithons history for one user
+  SELECT equalithons.name, users.first_name FROM users
+  INNER JOIN users ON users.uid=user_equalithons.user_id
+  INNER JOIN equalithons ON equalithons.equalithon_id=user_equalithons.equalithon_id
+  WHERE equalithons.endDate>NOW()
+
+  /*
+  USER PROFILE SECTION
+*/
+
+router.post('/api/signup', (req, res, next) => {
+  const values = [req.body.first_name, req.body.last_name, req.body.email, req.body.pwd]
+  pool.query(`INSERT INTO users(first_name, last_name, email, pwd)
+              VALUES($1, $2, $3, $4)`, values,
+              (q_err, q_res) => {
+                console.log(q_res)
+                console.log(q_err)
+                res.json("user posted to the db")
+      })
+} )
+
+router.get('/api/get/userprofilefromdb', (req, res, next) => {
+  const email = req.query.email
+  console.log(email)
+  pool.query(`SELECT * FROM users
+              WHERE email=$1`, [ email ],
+              (q_err, q_res) => {
+                if (q_err) {
+
+                }
+                res.json(q_res.rows)
+      })
+} )
+
+router.get('/api/get/userposts', (req, res, next) => {
+  const user_id = req.query.user_id
+  console.log(user_id)
+  pool.query(`SELECT * FROM posts
+              WHERE user_id=$1`, [ user_id ],
+              (q_err, q_res) => {
+                res.json(q_res.rows)
+      })
+} )
+
+
+router.put('/api/put/likes', (req, res, next) => {
+  const uid = [req.body.uid]
+  const post_id = String(req.body.post_id)
+
+  const values = [ uid, post_id ]
+  console.log(values)
+  pool.query(`UPDATE posts
+              SET like_user_id = like_user_id || $1, likes = likes + 1
+              WHERE NOT (like_user_id @> $1)
+              AND pid = ($2)`,
+     values, (q_err, q_res) => {
+    if (q_err) return next(q_err);
+    console.log(q_res)
+    res.json(q_res.rows);
+  });
+});
+
+
 
 /*
     POSTS ROUTES SECTION
@@ -87,7 +168,7 @@ router.put('/api/put/commenttodb', (req, res, next) => {
               (q_err, q_res ) => {
                   res.json(q_res.rows)
                   console.log(q_err)
-      })
+      });
 })
 
 
@@ -111,59 +192,6 @@ router.get('/api/get/allpostcomments', (req, res, next) => {
                   res.json(q_res.rows)
       })
 })
-
-/*
-  USER PROFILE SECTION
-*/
-
-router.post('/api/posts/userprofiletodb', (req, res, next) => {
-  const values = [req.body.profile.nickname, req.body.profile.email, req.body.profile.email_verified]
-  pool.query(`INSERT INTO users(username, email, email_verified, date_created)
-              VALUES($1, $2, $3, NOW())
-              ON CONFLICT DO NOTHING`, values,
-              (q_err, q_res) => {
-                res.json(q_res.rows)
-      })
-} )
-
-router.get('/api/get/userprofilefromdb', (req, res, next) => {
-  const email = req.query.email
-  console.log(email)
-  pool.query(`SELECT * FROM users
-              WHERE email=$1`, [ email ],
-              (q_err, q_res) => {
-                res.json(q_res.rows)
-      })
-} )
-
-router.get('/api/get/userposts', (req, res, next) => {
-  const user_id = req.query.user_id
-  console.log(user_id)
-  pool.query(`SELECT * FROM posts
-              WHERE user_id=$1`, [ user_id ],
-              (q_err, q_res) => {
-                res.json(q_res.rows)
-      })
-} )
-
-
-router.put('/api/put/likes', (req, res, next) => {
-  const uid = [req.body.uid]
-  const post_id = String(req.body.post_id)
-
-  const values = [ uid, post_id ]
-  console.log(values)
-  pool.query(`UPDATE posts
-              SET like_user_id = like_user_id || $1, likes = likes + 1
-              WHERE NOT (like_user_id @> $1)
-              AND pid = ($2)`,
-     values, (q_err, q_res) => {
-    if (q_err) return next(q_err);
-    console.log(q_res)
-    res.json(q_res.rows);
-  });
-});
-
 
 //Search Posts
 router.get('/api/get/searchpost', (req, res, next) => {
