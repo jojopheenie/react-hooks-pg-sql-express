@@ -1,9 +1,25 @@
 DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users (
   uid SERIAL PRIMARY KEY,
-  username VARCHAR(255) UNIQUE,
+  first_name VARCHAR(255),
+  last_name VARCHAR(255),
   email VARCHAR(255),
-  email_verified BOOLEAN,
+  password VARCHAR(255),
+  slack_handle VARCHAR(255),
+  reason_for_joining VARCHAR(255),
+  country VARCHAR(255),
+  region VARCHAR(255),
+  city VARCHAR(255),
+  post_code VARCHAR(255),
+  linkedIn VARCHAR(255),
+  job_title VARCHAR(255),
+  main_speciality VARCHAR(255),
+  experience VARCHAR(255),
+  last_company VARCHAR(255),
+  num_employees VARCHAR(255),
+  sector VARCHAR(255),
+  user_type VARCHAR(255),
+  current_team_Id VARCHAR(255),
   date_created DATE,
   last_login DATE
 );
@@ -11,11 +27,19 @@ CREATE TABLE users (
 INSERT INTO users(username, email, email_verified, date_created)
 VALUES('Josephine', 'josephine@email.com', true, NOW());
 
-DROP TABLE IF EXISTS posts CASCADE;
+DROP TABLE IF EXISTS equalithons CASCADE;
 CREATE TABLE posts (
   pid SERIAL PRIMARY KEY,
-  title VARCHAR(255),
-  body VARCHAR,
+  name VARCHAR(255),
+  start_date DATE,
+  end_date DATE,
+  non_profit VARCHAR(255),
+  sponsor VARCHAR(255),
+  description VARCHAR(255),
+  challenge1 VARCHAR(255),
+  challenge2 VARCHAR(255),
+  challenge3 VARCHAR(255),
+  equalithon_id
   search_vector TSVECTOR,
   user_id INT REFERENCES users(uid),
   author VARCHAR REFERENCES users(username),
@@ -27,13 +51,7 @@ CREATE TABLE posts (
 INSERT INTO posts(title, body, user_id, author, date_created)
 VALUES('title', 'body', 1, 'Josephine', NOW() );
 
-INSERT INTO posts(title, body, user_id, author, date_created)
-VALUES('Vacation', 'In cabo...', 1, 'Josephine', NOW() );
-
-INSERT INTO posts(title, body, user_id, author, date_created)
-VALUES('Weekend', 'In Montauk...', 1, 'Josephine', NOW() );
-
-DROP TABLE IF EXISTS comments CASCADE;
+DROP TABLE IF EXISTS teams CASCADE;
 CREATE TABLE comments (
   cid SERIAL PRIMARY KEY,
   comment VARCHAR(255),
@@ -43,9 +61,9 @@ CREATE TABLE comments (
   date_created TIMESTAMP
 );
 
-DROP TABLE IF EXISTS messages CASCADE;
+DROP TABLE IF EXISTS user_equalithons CASCADE;
 CREATE TABLE messages (
-  mid SERIAL PRIMARY KEY,
+  user_id TINYINT,
   message_sender VARCHAR(255) REFERENCES users(username),
   message_to VARCHAR(255) REFERENCES users(username),
   message_title VARCHAR(255),
