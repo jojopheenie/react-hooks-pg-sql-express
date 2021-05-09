@@ -1,31 +1,32 @@
 DROP TABLE IF EXISTS users CASCADE;
 CREATE TABLE users (
   uid SERIAL PRIMARY KEY,
-  first_name VARCHAR(255),
-  last_name VARCHAR(255),
-  email VARCHAR(255),
-  password VARCHAR(255),
-  slack_handle VARCHAR(255),
-  reason_for_joining VARCHAR(255),
-  country VARCHAR(255),
-  region VARCHAR(255),
-  city VARCHAR(255),
-  post_code VARCHAR(255),
-  linkedIn VARCHAR(255),
-  job_title VARCHAR(255),
-  main_speciality VARCHAR(255),
-  experience VARCHAR(255),
-  last_company VARCHAR(255),
-  num_employees VARCHAR(255),
-  sector VARCHAR(255),
-  user_type VARCHAR(255),
-  current_team_Id VARCHAR(255),
+  first_name VARCHAR(25) NOT NULL,
+  last_name VARCHAR(25) NOT NULL,
+  email VARCHAR(30) NOT NULL,
+  pwd VARCHAR(10) NOT NULL UNIQUE,
+  slack_handle VARCHAR(30),
+  reason_for_joining VARCHAR(30),
+  country VARCHAR(30),
+  region VARCHAR(20),
+  city VARCHAR(20),
+  post_code INT,
+  linkedIn VARCHAR(30),
+  job_title VARCHAR(30),
+  main_speciality VARCHAR(30),
+  experience VARCHAR(30),
+  last_company VARCHAR(30),
+  num_employees INT,
+  sector VARCHAR(30),
+  user_type VARCHAR(20),
+  current_team_Id INT,
   date_created DATE,
-  last_login DATE
+  last_login DATE,
+  CHECK (len(pwd) >= 6 AND len(pwd) <= 10)
 );
 
-INSERT INTO users(username, email, email_verified, date_created)
-VALUES('Josephine', 'josephine@email.com', true, NOW());
+INSERT INTO users(first_name, last_name, email, pwd)
+VALUES('Josephine', 'Amos','josephine@email.com', '123456');
 
 DROP TABLE IF EXISTS equalithons CASCADE;
 CREATE TABLE posts (
