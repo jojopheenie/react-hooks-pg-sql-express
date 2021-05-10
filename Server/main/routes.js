@@ -2,7 +2,6 @@ var express = require('express')
 var router = express.Router()
 var pool = require('./db')
 
-  //
   // let team_lead_id = pool.query('teams table');
   // let slackHandle = pool.query('SELECT slackHandle FROM Users WHERE id=$1', [team_lead_id])
 
@@ -20,10 +19,13 @@ var pool = require('./db')
   VALUES($1,$2,$3,$4)
   //get all teams
 
+  //post - create a team
+
   //get all equalithons history for one user
-  SELECT equalithons.name, users.first_name FROM users
-  INNER JOIN users ON users.uid=user_equalithons.user_id
-  INNER JOIN equalithons ON equalithons.equalithon_id=user_equalithons.equalithon_id
+  SELECT equalithons.equalithon_name, users.first_name FROM users
+  INNER JOIN user_equalithons ON users.uid=user_equalithons.user_id
+  INNER JOIN user_equalithons ON user_equalithons.team_id=teams.team_id
+  INNER JOIN teams ON teams.equalithon_id=equalithons.equalithon_id
   WHERE equalithons.endDate>NOW()
 
   /*
