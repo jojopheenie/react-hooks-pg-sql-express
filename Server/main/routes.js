@@ -39,16 +39,9 @@ var pool = require("./db");
 
 // select * from teams where team.equalithonid=[id]
 
-// //get all challenges
-// SELECT * FROM challenges WHERE equalithon_id=$1
+// get all teams???
 
-// //post to user equalithons table, equalithon id, challenge id, teamid
-// INSERT INTO user_equalithons(user_id, equalithon_id, team_id, current)
-// VALUES($1,$2,$3,$4)
-
-// //get all teams???
-
-// //post - create a team
+// post - create a team
 // INSERT INTO teams()
 
 // //get all equalithons history for one user
@@ -131,6 +124,46 @@ router.get("/api/equalithons", (req, res, next) => {
   ));
 });
 
+/*
+  CHALLENGES SECTION
+*/
+
+//get all challenges
+router.get("/api/challenges/:id", (req, res, next) => {
+	const equalithonID = req.params.id
+	pool.query(`SELECT * FROM challenges WHERE equalithon_id=${equalithonID}`, (
+    (q_err, q_res) => {
+			if (q_err) {
+        next(q_err)
+			}
+			res.json(q_res.rows);
+		}
+  ));
+});
+
+/*
+  USER EQUALITHONS HISTORY SECTION
+*/
+
+//User joins a new Equalithon, Challenege, and Team
+router.post("/api/user_equalithons", (req, res, next) => {
+	const values = [
+		req.body.user_id,
+		req.body.equalithon_id,
+		req.body.team_id,
+		req.body.current,
+	];
+	try {
+		let newUserEqualithon = pool.query(
+			`INSERT INTO user_equalithons(user_id, equalithon_id, team_id, current)
+              VALUES($1, $2, $3, $4)`,
+			values
+		);
+		res.json(newUserEqualithon);
+	} catch (err) {
+		next(err);
+	}
+});
 
 // router.get("/api/get/userprofilefromdb", (req, res, next) => {
 // 	const email = req.query.email;
