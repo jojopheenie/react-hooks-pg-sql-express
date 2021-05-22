@@ -3,8 +3,8 @@ import history from './history';
 
 export default class Auth {
   auth0 = new auth0.WebAuth({
-    domain: 'webapp10.us.auth0.com',
-    clientID: "GldeXYkNPsouhcSqDLIj8vs8pwUXECkd",
+    domain: 'dev-1-v2fo11.us.auth0.com',
+    clientID: "exgvjA0pCwV67TkHPbu3Ttp5lOhhJu42",
     redirectUri: 'http://localhost:3000/callback',
     responseType: 'token id_token',
     scope: 'openid profile email'
